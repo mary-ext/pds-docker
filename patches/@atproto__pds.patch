@@ -1,0 +1,30 @@
+diff --git a/dist/context.js b/dist/context.js
+index 317714de8ecf197e606fd89ae9355dc61bf1b2ea..c074fc3df32755b3ce434ac85c384be5f49a4d18 100644
+--- a/dist/context.js
++++ b/dist/context.js
+@@ -406,6 +406,11 @@ class AppContext {
+                 // the PDS can use tokenId as access tokens. This allows the PDS to
+                 // always use up-to-date token data from the token store.
+                 accessTokenMode: oauth_provider_1.AccessTokenMode.light,
++                getClientInfo: (clientId, {}) => {
++                    if (clientId === "https://aglais.pages.dev/oauth/client-metadata.json") {
++                        return { isFirstParty: true, isTrusted: true };
++                    }
++                }
+             })
+             : undefined;
+         const oauthVerifier = oauthProvider ?? // OAuthProvider extends OAuthVerifier
+diff --git a/dist/handle/explicit-slurs.js b/dist/handle/explicit-slurs.js
+index e0235d447a5abea71738a3b04dea5daf83f66226..369601fb2b41103a8190180bfb27ea2c840f8d22 100644
+--- a/dist/handle/explicit-slurs.js
++++ b/dist/handle/explicit-slurs.js
+@@ -13,8 +13,7 @@ const explicitSlurRegexes = [
+     /\b[tŤťṪṫŢţṬṭȚțṰṱṮṯŦŧȾⱦƬƭƮʈT̈ẗᵵƫȶ][rŔŕŘřṘṙŖŗȐȑȒȓṚṛṜṝṞṟR̃r̃ɌɍꞦꞧⱤɽᵲᶉꭉ][aÁáÀàĂăẮắẰằẴẵẲẳÂâẤấẦầẪẫẨẩǍǎÅåǺǻÄäǞǟÃãȦȧǠǡĄąĄ́ą́Ą̃ą̃ĀāĀ̀ā̀ẢảȀȁA̋a̋ȂȃẠạẶặẬậḀḁȺⱥꞺꞻᶏẚＡａ4]+[nŃńǸǹŇňÑñṄṅŅņṆṇṊṋṈṉN̈n̈ƝɲŊŋꞐꞑꞤꞥᵰᶇɳȵꬻꬼИиПпＮｎ]{1,2}([iÍíi̇́Ììi̇̀ĬĭÎîǏǐÏïḮḯĨĩi̇̃ĮįĮ́į̇́Į̃į̇̃ĪīĪ̀ī̀ỈỉȈȉI̋i̋ȊȋỊịꞼꞽḬḭƗɨᶖİiIıＩｉ1lĺľļḷḹl̃ḽḻłŀƚꝉⱡɫɬꞎꬷꬸꬹᶅɭȴＬｌ][e3ЄєЕеÉéÈèĔĕÊêẾếỀềỄễỂểÊ̄ê̄Ê̌ê̌ĚěËëẼẽĖėĖ́ė́Ė̃ė̃ȨȩḜḝĘęĘ́ę́Ę̃ę̃ĒēḖḗḔḕẺẻȄȅE̋e̋ȆȇẸẹỆệḘḙḚḛɆɇE̩e̩È̩è̩É̩é̩ᶒⱸꬴꬳＥｅ]|[yÝýỲỳŶŷY̊ẙŸÿỸỹẎẏȲȳỶỷỴỵɎɏƳƴỾỿ]|[e3ЄєЕеÉéÈèĔĕÊêẾếỀềỄễỂểÊ̄ê̄Ê̌ê̌ĚěËëẼẽĖėĖ́ė́Ė̃ė̃ȨȩḜḝĘęĘ́ę́Ę̃ę̃ĒēḖḗḔḕẺẻȄȅE̋e̋ȆȇẸẹỆệḘḙḚḛɆɇE̩e̩È̩è̩É̩é̩ᶒⱸꬴꬳＥｅ][rŔŕŘřṘṙŖŗȐȑȒȓṚṛṜṝṞṟR̃r̃ɌɍꞦꞧⱤɽᵲᶉꭉ])[sŚśṤṥŜŝŠšṦṧṠṡŞşṢṣṨṩȘșS̩s̩ꞨꞩⱾȿꟅʂᶊᵴ]?\b/,
+ ];
+ const hasExplicitSlur = (handle) => {
+-    return explicitSlurRegexes.some((reg) => reg.test(handle) ||
+-        reg.test(handle.replaceAll('.', '').replaceAll('-', '').replaceAll('_', '')));
++    return false;
+ };
+ exports.hasExplicitSlur = hasExplicitSlur;
+ //# sourceMappingURL=explicit-slurs.js.map

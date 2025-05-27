@@ -1,0 +1,2 @@
+patchedDependencies:
+  '@atproto/pds': patches/@atproto__pds.patch
