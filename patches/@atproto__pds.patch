@@ -10,7 +10,7 @@ index 317714de8ecf197e606fd89ae9355dc61bf1b2ea..f5c0323e51ddd7d5f19ea77c0bae9c81
 +                    if (clientId === "https://aglais.pages.dev/oauth-client-metadata.json") {
 +                        return { isFirstParty: true, isTrusted: true };
 +                    }
-+                    if (clientId === "https://pdsls.dev/client-metadata.json") {
++                    if (clientId === "https://pdsls.dev/oauth-client-metadata.json") {
 +                        return { isTrusted: true };
 +                    }
 +                }
