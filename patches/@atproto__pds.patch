@@ -1,14 +1,17 @@
 diff --git a/dist/context.js b/dist/context.js
-index 317714de8ecf197e606fd89ae9355dc61bf1b2ea..c074fc3df32755b3ce434ac85c384be5f49a4d18 100644
+index 317714de8ecf197e606fd89ae9355dc61bf1b2ea..f5c0323e51ddd7d5f19ea77c0bae9c8160677728 100644
 --- a/dist/context.js
 +++ b/dist/context.js
-@@ -406,6 +406,11 @@ class AppContext {
+@@ -406,6 +406,14 @@ class AppContext {
                  // the PDS can use tokenId as access tokens. This allows the PDS to
                  // always use up-to-date token data from the token store.
                  accessTokenMode: oauth_provider_1.AccessTokenMode.light,
 +                getClientInfo: (clientId, {}) => {
 +                    if (clientId === "https://aglais.pages.dev/oauth-client-metadata.json") {
 +                        return { isFirstParty: true, isTrusted: true };
++                    }
++                    if (clientId === "https://pdsls.dev/client-metadata.json") {
++                        return { isTrusted: true };
 +                    }
 +                }
              })
