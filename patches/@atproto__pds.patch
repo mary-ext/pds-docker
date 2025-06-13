@@ -7,7 +7,7 @@ index 317714de8ecf197e606fd89ae9355dc61bf1b2ea..c074fc3df32755b3ce434ac85c384be5
                  // always use up-to-date token data from the token store.
                  accessTokenMode: oauth_provider_1.AccessTokenMode.light,
 +                getClientInfo: (clientId, {}) => {
-+                    if (clientId === "https://aglais.pages.dev/oauth/client-metadata.json") {
++                    if (clientId === "https://aglais.pages.dev/oauth-client-metadata.json") {
 +                        return { isFirstParty: true, isTrusted: true };
 +                    }
 +                }
