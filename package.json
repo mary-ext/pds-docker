@@ -2,6 +2,6 @@
 	"private": true,
 	"packageManager": "pnpm@10.11.0",
 	"dependencies": {
-		"@atproto/pds": "^0.4.139"
+		"@atproto/pds": "^0.4.168"
 	}
 }
