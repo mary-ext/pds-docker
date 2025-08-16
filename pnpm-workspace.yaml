@@ -1,7 +1,5 @@
+ignorePatchFailures: false
 onlyBuiltDependencies:
   - better-sqlite3
-
 patchedDependencies:
   '@atproto/pds': patches/@atproto__pds.patch
-
-ignorePatchFailures: false

@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   '@atproto/pds':
-    hash: b9512de96f0a5c81fed5bdaebf8d47f944cf8399e7bd92b5d1c23a15d3a52437
+    hash: c83e47de91384152f4226d9df4e2d203c50cccd075c057d146caf0c2ba7d84e9
     path: patches/@atproto__pds.patch
 
 importers:
@@ -15,7 +15,7 @@ importers:
     dependencies:
       '@atproto/pds':
         specifier: ^0.4.168
-        version: 0.4.168(patch_hash=b9512de96f0a5c81fed5bdaebf8d47f944cf8399e7bd92b5d1c23a15d3a52437)
+        version: 0.4.168(patch_hash=c83e47de91384152f4226d9df4e2d203c50cccd075c057d146caf0c2ba7d84e9)
 
 packages:
 
@@ -1847,7 +1847,7 @@ snapshots:
       '@atproto/jwk': 0.5.0
       zod: 3.25.76
 
-  '@atproto/pds@0.4.168(patch_hash=b9512de96f0a5c81fed5bdaebf8d47f944cf8399e7bd92b5d1c23a15d3a52437)':
+  '@atproto/pds@0.4.168(patch_hash=c83e47de91384152f4226d9df4e2d203c50cccd075c057d146caf0c2ba7d84e9)':
     dependencies:
       '@atproto-labs/fetch-node': 0.1.9
       '@atproto-labs/xrpc-utils': 0.0.18

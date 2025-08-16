@@ -1,24 +1,5 @@
-diff --git a/dist/context.js b/dist/context.js
-index 317714de8ecf197e606fd89ae9355dc61bf1b2ea..f5c0323e51ddd7d5f19ea77c0bae9c8160677728 100644
---- a/dist/context.js
-+++ b/dist/context.js
-@@ -406,6 +406,14 @@ class AppContext {
-                 // the PDS can use tokenId as access tokens. This allows the PDS to
-                 // always use up-to-date token data from the token store.
-                 accessTokenMode: oauth_provider_1.AccessTokenMode.light,
-+                getClientInfo: (clientId, {}) => {
-+                    if (clientId === "https://aglais.pages.dev/oauth-client-metadata.json") {
-+                        return { isFirstParty: true, isTrusted: true };
-+                    }
-+                    if (clientId === "https://pdsls.dev/oauth-client-metadata.json") {
-+                        return { isTrusted: true };
-+                    }
-+                }
-             })
-             : undefined;
-         const oauthVerifier = oauthProvider ?? // OAuthProvider extends OAuthVerifier
 diff --git a/dist/handle/explicit-slurs.js b/dist/handle/explicit-slurs.js
-index e0235d447a5abea71738a3b04dea5daf83f66226..369601fb2b41103a8190180bfb27ea2c840f8d22 100644
+index e0235d447a5abea71738a3b04dea5daf83f66226..54a8ddb27e0de8570806dc1e6d02b73f42bdaae5 100644
 --- a/dist/handle/explicit-slurs.js
 +++ b/dist/handle/explicit-slurs.js
 @@ -13,8 +13,7 @@ const explicitSlurRegexes = [
