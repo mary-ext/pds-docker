@@ -1,12 +1,12 @@
 diff --git a/dist/oauth-verifier.js b/dist/oauth-verifier.js
-index 01bbd036d7dc1a39f660d66378b5d54bdf40778c..b57a2f55c92b975680dd602bac36c024b7490fc2 100644
+index 01bbd036d7dc1a39f660d66378b5d54bdf40778c..e6a1fcaf6f1cdcc96cbe5f2c5a18d980781e52f3 100644
 --- a/dist/oauth-verifier.js
 +++ b/dist/oauth-verifier.js
-@@ -46,6 +46,7 @@ class OAuthVerifier {
-     async checkDpopProof(httpMethod, httpUrl, httpHeaders, accessToken) {
+@@ -47,6 +47,7 @@ class OAuthVerifier {
          const dpopProof = await this.dpopManager.checkProof(httpMethod, httpUrl, httpHeaders, accessToken);
          if (dpopProof) {
-+            console.log(`[dpop] ts=${Date.now()}; jti=${dpopProof.jti}`);
              const unique = await this.replayManager.uniqueDpop(dpopProof.jti);
++            console.log(`[dpop] ts=${Date.now()}; jti=${dpopProof.jti}; unique=${unique}`);
              if (!unique)
                  throw new invalid_dpop_proof_error_js_1.InvalidDpopProofError('DPoP proof replayed');
+         }
