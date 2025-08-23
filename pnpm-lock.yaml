@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
+  '@atproto/oauth-provider':
+    hash: 444e2955dd9025c82a59959be9c4a4765a32e5f87c6f6bc0c3bba894c6d07435
+    path: patches/@atproto__oauth-provider.patch
   '@atproto/pds':
     hash: c83e47de91384152f4226d9df4e2d203c50cccd075c057d146caf0c2ba7d84e9
     path: patches/@atproto__pds.patch
@@ -1809,7 +1812,7 @@ snapshots:
     optionalDependencies:
       '@atproto/oauth-provider-api': 0.2.1
 
-  '@atproto/oauth-provider@0.10.2':
+  '@atproto/oauth-provider@0.10.2(patch_hash=444e2955dd9025c82a59959be9c4a4765a32e5f87c6f6bc0c3bba894c6d07435)':
     dependencies:
       '@atproto-labs/fetch': 0.2.3
       '@atproto-labs/fetch-node': 0.1.9
@@ -1857,7 +1860,7 @@ snapshots:
       '@atproto/crypto': 0.4.4
       '@atproto/identity': 0.4.8
       '@atproto/lexicon': 0.4.12
-      '@atproto/oauth-provider': 0.10.2
+      '@atproto/oauth-provider': 0.10.2(patch_hash=444e2955dd9025c82a59959be9c4a4765a32e5f87c6f6bc0c3bba894c6d07435)
       '@atproto/oauth-scopes': 0.0.2
       '@atproto/repo': 0.8.5
       '@atproto/syntax': 0.4.0
