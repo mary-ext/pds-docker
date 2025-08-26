@@ -1,0 +1,13 @@
+diff --git a/dist/router/create-authorization-page-middleware.js b/dist/router/create-authorization-page-middleware.js
+index 0f25f8f68976531d38710c63458895dd56c3b2c1..cb9960ee5811b828bee4ea6220a1681b08df8ac2 100644
+--- a/dist/router/create-authorization-page-middleware.js
++++ b/dist/router/create-authorization-page-middleware.js
+@@ -20,7 +20,7 @@ function createAuthorizationPageMiddleware(server, { onError }) {
+     router.get('/oauth/authorize', withErrorHandler(async function (req, res) {
+         res.setHeader('Cache-Control', 'no-store');
+         res.setHeader('Pragma', 'no-cache');
+-        (0, index_js_1.validateFetchSite)(req, ['cross-site', 'none']);
++        (0, index_js_1.validateFetchSite)(req, ['cross-site', 'same-site', 'none']);
+         (0, index_js_1.validateFetchMode)(req, ['navigate']);
+         (0, index_js_1.validateFetchDest)(req, ['document']);
+         (0, index_js_1.validateOrigin)(req, issuerOrigin);
