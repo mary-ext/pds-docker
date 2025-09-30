@@ -1,3 +1,83 @@
+diff --git a/dist/replay/replay-store-memory.js b/dist/replay/replay-store-memory.js
+index ebef99703bbe7e324b0005c20dd263710a54eee7..d9a79259c49e361e379387f1138cb5952cb2c9a6 100644
+--- a/dist/replay/replay-store-memory.js
++++ b/dist/replay/replay-store-memory.js
+@@ -6,21 +6,35 @@ class ReplayStoreMemory {
+     nonces = new Map();
+     /**
+      * Returns true if the nonce is unique within the given time frame.
++     * Allows duplicates within a 3-second grace period to handle legitimate retries.
+      */
+     async unique(namespace, nonce, timeFrame) {
+         this.cleanup();
+         const key = `${namespace}:${nonce}`;
+         const now = Date.now();
+-        const exp = this.nonces.get(key);
+-        this.nonces.set(key, now + timeFrame);
+-        return exp == null || exp < now;
++        const existing = this.nonces.get(key);
++
++        // If we've never seen this nonce or it expired, mark it as seen
++        if (existing == null || existing.expiresAt < now) {
++            this.nonces.set(key, { createdAt: now, expiresAt: now + timeFrame });
++            return true;
++        }
++
++        // If we've seen it before but within 3 seconds, allow it (grace period for retries)
++        if ((now - existing.createdAt) <= 3000) {
++            return true;
++        }
++
++        // Otherwise, it's a replay attack
++        return false;
+     }
+     cleanup() {
+         const now = Date.now();
+         if (this.lastCleanup < now - 60_000) {
+-            for (const [key, expires] of this.nonces) {
+-                if (expires < now)
++            for (const [key, entry] of this.nonces) {
++                if (entry.expiresAt < now) {
+                     this.nonces.delete(key);
++                }
+             }
+             this.lastCleanup = now;
+         }
+diff --git a/dist/replay/replay-store-redis.js b/dist/replay/replay-store-redis.js
+index 42aa3d0ab5b9f13bfe34abbe8d84cf5ceeed4386..6cdb95d15b99360bc552851c2195e5602e1d9587 100644
+--- a/dist/replay/replay-store-redis.js
++++ b/dist/replay/replay-store-redis.js
+@@ -9,11 +9,28 @@ class ReplayStoreRedis {
+     }
+     /**
+      * Returns true if the nonce is unique within the given time frame.
++     * Allows duplicates within a 3-second grace period to handle legitimate retries.
+      */
+     async unique(namespace, nonce, timeFrame) {
+         const key = `nonces:${namespace}:${nonce}`;
+-        const prev = await this.redis.set(key, '1', 'PX', timeFrame, 'GET');
+-        return prev == null;
++        const now = Date.now();
++
++        // Set the key with current timestamp, and get the previous value if it existed
++        const prev = await this.redis.set(key, now.toString(), 'PX', timeFrame, 'GET');
++
++        // If this is the first time seeing this nonce, allow it
++        if (prev == null) {
++            return true;
++        }
++
++        // If we've seen it before, check if it's within the 3-second grace period
++        const firstSeenTime = parseInt(prev, 10);
++        if (!isNaN(firstSeenTime) && (now - firstSeenTime) <= 3000) {
++            return true;
++        }
++
++        // Otherwise, it's a replay attack
++        return false;
+     }
+ }
+ exports.ReplayStoreRedis = ReplayStoreRedis;
 diff --git a/dist/router/create-authorization-page-middleware.js b/dist/router/create-authorization-page-middleware.js
 index 0f25f8f68976531d38710c63458895dd56c3b2c1..cb9960ee5811b828bee4ea6220a1681b08df8ac2 100644
 --- a/dist/router/create-authorization-page-middleware.js
