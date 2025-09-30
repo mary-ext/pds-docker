@@ -1,14 +1,28 @@
+diff --git a/dist/replay/replay-manager.js b/dist/replay/replay-manager.js
+index 265c4ad83535918ba087569639d26c3ea006d225..21b6ba7f944d81c1c92c27140444471e8ca7b4c1 100644
+--- a/dist/replay/replay-manager.js
++++ b/dist/replay/replay-manager.js
+@@ -19,7 +19,7 @@ class ReplayManager {
+         return this.replayStore.unique(`JAR@${clientId}`, jti, asTimeFrame(constants_js_1.JAR_MAX_AGE));
+     }
+     async uniqueDpop(jti, clientId) {
+-        return this.replayStore.unique(clientId ? `DPoP@${clientId}` : `DPoP`, jti, asTimeFrame(constants_js_1.DPOP_NONCE_MAX_AGE));
++        return this.replayStore.unique(clientId ? `DPoP@${clientId}` : `DPoP`, jti, asTimeFrame(constants_js_1.DPOP_NONCE_MAX_AGE), true);
+     }
+     async uniqueCodeChallenge(challenge) {
+         return this.replayStore.unique('CodeChallenge', challenge, asTimeFrame(constants_js_1.CODE_CHALLENGE_REPLAY_TIMEFRAME));
 diff --git a/dist/replay/replay-store-memory.js b/dist/replay/replay-store-memory.js
-index ebef99703bbe7e324b0005c20dd263710a54eee7..d9a79259c49e361e379387f1138cb5952cb2c9a6 100644
+index ebef99703bbe7e324b0005c20dd263710a54eee7..1133a24a759107662880385d08e10870b9ebf0a2 100644
 --- a/dist/replay/replay-store-memory.js
 +++ b/dist/replay/replay-store-memory.js
 @@ -6,21 +6,35 @@ class ReplayStoreMemory {
      nonces = new Map();
      /**
       * Returns true if the nonce is unique within the given time frame.
-+     * Allows duplicates within a 3-second grace period to handle legitimate retries.
++     * Allows duplicates within a 3-second grace period to handle legitimate retries when allowGracePeriod is true.
       */
-     async unique(namespace, nonce, timeFrame) {
+-    async unique(namespace, nonce, timeFrame) {
++    async unique(namespace, nonce, timeFrame, allowGracePeriod = false) {
          this.cleanup();
          const key = `${namespace}:${nonce}`;
          const now = Date.now();
@@ -23,8 +37,8 @@ index ebef99703bbe7e324b0005c20dd263710a54eee7..d9a79259c49e361e379387f1138cb595
 +            return true;
 +        }
 +
-+        // If we've seen it before but within 3 seconds, allow it (grace period for retries)
-+        if ((now - existing.createdAt) <= 3000) {
++        // If we've seen it before but within 3 seconds and grace period is allowed, allow it (grace period for retries)
++        if (allowGracePeriod && (now - existing.createdAt) <= 3000) {
 +            return true;
 +        }
 +
@@ -44,16 +58,17 @@ index ebef99703bbe7e324b0005c20dd263710a54eee7..d9a79259c49e361e379387f1138cb595
              this.lastCleanup = now;
          }
 diff --git a/dist/replay/replay-store-redis.js b/dist/replay/replay-store-redis.js
-index 42aa3d0ab5b9f13bfe34abbe8d84cf5ceeed4386..6cdb95d15b99360bc552851c2195e5602e1d9587 100644
+index 42aa3d0ab5b9f13bfe34abbe8d84cf5ceeed4386..b4fc1ef3ecb32ba9625658b73b0b7350281124bb 100644
 --- a/dist/replay/replay-store-redis.js
 +++ b/dist/replay/replay-store-redis.js
-@@ -9,11 +9,28 @@ class ReplayStoreRedis {
+@@ -9,11 +9,30 @@ class ReplayStoreRedis {
      }
      /**
       * Returns true if the nonce is unique within the given time frame.
-+     * Allows duplicates within a 3-second grace period to handle legitimate retries.
++     * Allows duplicates within a 3-second grace period to handle legitimate retries when allowGracePeriod is true.
       */
-     async unique(namespace, nonce, timeFrame) {
+-    async unique(namespace, nonce, timeFrame) {
++    async unique(namespace, nonce, timeFrame, allowGracePeriod = false) {
          const key = `nonces:${namespace}:${nonce}`;
 -        const prev = await this.redis.set(key, '1', 'PX', timeFrame, 'GET');
 -        return prev == null;
@@ -67,10 +82,12 @@ index 42aa3d0ab5b9f13bfe34abbe8d84cf5ceeed4386..6cdb95d15b99360bc552851c2195e560
 +            return true;
 +        }
 +
-+        // If we've seen it before, check if it's within the 3-second grace period
-+        const firstSeenTime = parseInt(prev, 10);
-+        if (!isNaN(firstSeenTime) && (now - firstSeenTime) <= 3000) {
-+            return true;
++        // If we've seen it before, check if it's within the 3-second grace period (if allowed)
++        if (allowGracePeriod) {
++            const firstSeenTime = parseInt(prev, 10);
++            if (!isNaN(firstSeenTime) && (now - firstSeenTime) <= 3000) {
++                return true;
++            }
 +        }
 +
 +        // Otherwise, it's a replay attack

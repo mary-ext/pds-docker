@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   '@atproto/oauth-provider':
-    hash: 8173e667c867e372b163c656711786b01ce4c167c9b47e93bb4127cc76bd5fa8
+    hash: 31dec8172f7abf82713ecc8bcc27e517743cebed0c832c0af1b29e7f20082a06
     path: patches/@atproto__oauth-provider.patch
   '@atproto/pds':
     hash: c83e47de91384152f4226d9df4e2d203c50cccd075c057d146caf0c2ba7d84e9
@@ -1812,7 +1812,7 @@ snapshots:
     optionalDependencies:
       '@atproto/oauth-provider-api': 0.2.1
 
-  '@atproto/oauth-provider@0.10.2(patch_hash=8173e667c867e372b163c656711786b01ce4c167c9b47e93bb4127cc76bd5fa8)':
+  '@atproto/oauth-provider@0.10.2(patch_hash=31dec8172f7abf82713ecc8bcc27e517743cebed0c832c0af1b29e7f20082a06)':
     dependencies:
       '@atproto-labs/fetch': 0.2.3
       '@atproto-labs/fetch-node': 0.1.9
@@ -1860,7 +1860,7 @@ snapshots:
       '@atproto/crypto': 0.4.4
       '@atproto/identity': 0.4.8
       '@atproto/lexicon': 0.4.12
-      '@atproto/oauth-provider': 0.10.2(patch_hash=8173e667c867e372b163c656711786b01ce4c167c9b47e93bb4127cc76bd5fa8)
+      '@atproto/oauth-provider': 0.10.2(patch_hash=31dec8172f7abf82713ecc8bcc27e517743cebed0c832c0af1b29e7f20082a06)
       '@atproto/oauth-scopes': 0.0.2
       '@atproto/repo': 0.8.5
       '@atproto/syntax': 0.4.0
